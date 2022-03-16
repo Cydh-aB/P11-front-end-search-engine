@@ -1,0 +1,175 @@
+body {
+    margin: 0 5% 0 5%;
+}
+
+/** Logo **/
+
+header img {
+    width: 300px;
+    display: block;
+    margin: auto;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+/** search bar **/
+
+.search_bar {
+    position: relative;
+    display: flex;
+    align-items: center;  
+    width: 100%;
+    margin: auto;
+    font-size: 1.25rem;
+    background-color: #E7E7E7;
+}
+
+.search_bar input {
+    width: 100%;
+    font-size: 1.25rem;
+    height: 3.5rem;
+    background-color: #E7E7E7;
+    border: none;
+    margin-left: 1rem;
+    outline: none;
+}
+
+
+
+/**Filter**/
+
+.filter_select {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.filter_select_trigger {
+    display: flex;
+    position: relative;
+    align-items: center;
+    margin-right: 5rem;
+    text-decoration: none;
+    color: white;
+    width: 10rem;
+    height: 4rem;
+    border-radius: 5px;
+    margin-top: 1.2rem;
+}
+
+.filter_select_trigger span {
+    margin-left: 1rem;
+    font-size: 18px;
+}
+
+.filter .ingredient {
+    background-color: #3282F7;
+}
+
+.filter .appareil {
+    background-color: #68D9A4;
+}
+
+.filter .ustensiles {
+    background-color: #ED6454;
+}
+
+.arrow {
+    position: relative;
+    height: 1rem;
+    width: 1rem;
+}
+
+.arrow::before, .arrow::after {
+    content: "";
+    position: absolute;
+    bottom: 0px;
+    width: 0.10rem;
+    height: 100%;
+    left: 10%;
+    transition: all 0.5s;
+}
+
+.arrow::after {
+    left: 3rem;
+    background-color: white;
+    transform: rotate(-45deg);
+}
+
+.open .arrow::after {
+    left: 0.5rem;
+    transform: rotate(45deg);
+    background-color: white;
+}
+
+.open .arrow::before {
+    transform: rotate(-45deg);
+    background-color: white;
+}
+
+.arrow::before {
+    left: 2.35rem;
+    transform: rotate(45deg);
+    background-color: white;
+}
+
+/** Main ( recipe ) **/ 
+
+#main { 
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-column-gap: 2%;
+}
+
+.recipe_card_img {
+    height: 180px;
+    width: 100%;
+    background-color: #C7BEBE;
+    border-radius: 5%;
+    border: none;
+}
+
+
+article {
+    margin: 5% 0 5% 0;
+    background-color: #E7E7E7;
+    border-radius: 3%;
+    cursor: pointer;
+}
+
+.recipe_card {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.9rem;
+    max-height: 150px;
+    word-wrap: break-word;
+    padding: 1.20rem;
+}
+
+.cuisson_description {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: justify;
+    width: 50%;
+}
+
+.sr_only {
+    border: 0;
+    height: 1px;
+    width: 1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+}
+
+.ingredient_container {
+    overflow: hidden;
+    line-height: 0.8rem;
+    margin-right: 2rem;
+}
+.ingredient_container span {
+    font-weight: bold;
+}

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="stylesheet" href="style.css">
+    <script src="https://kit.fontawesome.com/60db700768.js" crossorigin="anonymous"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
@@ -17,6 +18,7 @@
 
         <div class="search_bar">
             <input type="text" placeholder="Rechercher une recette">
+            <div class="fas fa-search"></div>
         </div>
 
         <!---Filtre-->
@@ -25,20 +27,28 @@
             <section class="filter">
                 <div class="filter_button">
                     <div class="filter_select">
-                        <a href="#" role="button" class="filter_select_trigger"  aria-haspopup="listbox" aria-label="Trier par" aria-expanded="false">
+                        <a href="#" role="button" class=" ingredient filter_select_trigger"  aria-haspopup="listbox" aria-label="Trier par" aria-expanded="false">
                             <span>Ingrédients</span>
+                            <div class="arrow"></div>
                         </a>
-                        <a href="#" role="button" class="filter_select_trigger"  aria-haspopup="listbox" aria-label="Trier par" aria-expanded="false">
+                        <a href="#" role="button" class="appareil filter_select_trigger"  aria-haspopup="listbox" aria-label="Trier par" aria-expanded="false">
                             <span>Appareil</span>
+                            <div class="arrow"></div>
                         </a>
-                        <a href="#" role="button" class="filter_select_trigger"  aria-haspopup="listbox" aria-label="Trier par" aria-expanded="false">
+                        <a href="#" role="button" class="ustensiles filter_select_trigger"  aria-haspopup="listbox" aria-label="Trier par" aria-expanded="false">
                             <span>Ustensiles</span>
+                            <div class="arrow"></div>
                         </a>
                     </div>
                 </div>
             </section>
         </div>
-        
     </header>
+
+    <main id="main" class="recipe_container">
+
+    </main>
+
+    <script src="scripts/index.js" type="module"></script>
 </body>
 </html>
