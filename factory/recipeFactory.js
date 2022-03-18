@@ -71,7 +71,6 @@ let recipeFactory = (recipe) => {
 
     let main = document.getElementById("main");
     main.appendChild(recipeContainer);
-
 }
 
 export { recipeFactory };
