@@ -1,69 +1,156 @@
 import { recipes } from "../recipes.js";
-import { recipeFactory } from "../factory/recipeFactory.js";
+import recipeClass from "../factory/recipeFactory.js";
 
-let recipesArray = Object.entries(recipes);
+// let recipesArray = Object.entries(recipes);
 
-console.log(recipesArray);
+// -- DOM
+const searchInput = document.getElementById("main_search_bar")
+const recipeContainer = document.getElementById("recipe_container")
 
-recipesArray.forEach(recipe => recipeFactory(recipe));
+// -- Variables
 
-// Algo 1, fonction de split
+let ingredients = []
+let ingredientsArr = []
+let appareils = []
+let appareilsArr = []
+let ustensils = []
+let ustensilsArr = []
+var searchWord = ""
+var foundArray = []
+var foundArrayTemp = []
 
-let splitstring = (array) => {
-    let newArr = [];
-    for (let i = 0; i<array.lenght; i++) {
-        newArr.push(array[i].split(" "));
-    }
-    return newArr
-}
+//-------------------TEST----------------//
+// console.log(recipesArray);
 
-//On extrait chaque ingredients dans un array
-let ingredientsOptions = [...new Set(recipesArray.map(a => a[1].ingredients.map(b => b.ingredient.toLowerCase()).flat()))];
+// recipesArray.forEach(recipe => recipeFactory(recipe));
+//-------------------TEST----------------//
 
-//Les mots options pour ingrédients
-let ingredientsWords = [...new Set(splitstring(ingredientsOptions).flat())];
 
-//On récupère la liste des mots depuis le nom des recettes
-let recipeName = [...new Set(recipesArray.map(a => a[1].name.toLowerCase()))];
-let recipeNameWords = [...new Set(splitstring(recipeName).flat())];
+//On extrait tout les ingrédients, appareils, ustensiles
 
-//On récupère la liste des mots des descriptions
-let recipeDescription = [...new Set(recipesArray.map(a => a[1].description.toLowerCase().replace(/[^\w\s+è+ç+é+ï+à+ù+û+ô+ê+î]/gi, "")))];
-let recipeDescriptionWords = splitstring(recipeDescription).flat();
+function ingredientsFilter(arr){
+    ingredientsArr = []
+    arr.forEach(recipe =>{
+        recipe.ingredients.forEach(ingredient =>{
+            ingredientsArr.push(ingredient.ingredient.toLowerCase())
+            ingredients = [...new Set(ingredientsArr)].sort()
+        })
+    })
+    return ingredients
+};
 
-//On combine toutes les options en un array pour la recherche principale
-let searchOptions = [...new Set(ingredientsWords.concat(recipeNameWords, recipeDescriptionWords))];
+function appareilsFilter(arr){
+    appareilsArr = []
+    arr.forEach(recipe =>{
+        appareilsArr.push(recipe.appliance.toLowerCase())
+        appareils = [...new Set(appareilsArr)].sort()
+    })
+    return appareils
+};
 
-console.log(searchOptions);
+function ustensilsFilter(arr) {
+    ustensilsArr = []
+    arr.forEach(recipe =>{
+        recipe.ustensils.forEach(ustensil =>{
+            ustensilsArr.push(ustensil.toLowerCase())
+            ustensils = [...new Set(ustensilsArr)].sort()
+        })
+    })
+    return ustensils
+};
 
-let searchInput = document.getElementById("search_input");
 
-//Fonction de recherche
+//-- Fonction pour générer/afficher l'HTML pour chaque recette
 
-let mainSearch = (e) => {
-    let mainSection = document.getElementById("main");
-    if (searchInput.value.length > 2) {
-        let input = e.target.value.toLowerCase();
-        let selectedArr = [];
-        mainSection.innerHTML = "";
-        for (let i=0; i<recipesArray.length; i++) {
-            if (recipesArray[i][1].name.toLowerCase().includes(input) || recipesArray[i][1].description.toLowerCase().includes(input) || Object.values(recipesArray[i][1].ingredients).indexOf(input) > -1) {
-                selectedArr.push(recipesArray[i]);
-            }
-        }
-        if (selectedArr.length > 0) {
-            selectedArr.forEach(recipe => {
-                recipeFactory(recipe);
+
+function createRecipe(recipeArr){
+    recipeArr.map(function(recipe){
+        let showRecipe = new recipeClass(
+            recipe.name,
+            recipe.servings,
+            recipe.time,
+            recipe.ingredients,
+            recipe.description,
+            recipe.appliance,
+            recipe.ustensils,
+        )
+        showRecipe.recipeCard()
+    }).join("")
+};
+
+
+//-- Fonction de recherche V2
+
+
+function search(recipeArrays, value){
+    const foundArray = recipeArrays.filter((recipeArray) => {
+        // On prends tout les ingrédient pour chaque recette pour la validité de condition plus tard
+        function ingredientList(){
+            let x = ""
+            recipeArray.ingredients.forEach(ingredient => {
+                x += ingredient.ingredient.toLowerCase() + ' '
             })
-        } else {
-            mainSection.innerHTML = "<p id='msg_noResult'> Aucune recette ne correspond à votre critère... vous pouvez chercher << tarte aux pommes >>, << poisson >> etc...</p>";
+            return x
         }
+
+        // On prends tout les ustensiles pour chaque recette pour la validité de condition plus tard
+        function ustensilList(){
+            let y = ""
+            recipeArray.ustensils.forEach(ustensil => {
+                y += ustensil.toLowerCase() + ' '
+            })
+            return y
+        }
+
+        return recipeArray.name.toLowerCase().includes(value) ||
+        recipeArray.description.toLowerCase().includes(value) ||
+        ingredientList().includes(value) ||
+        ustensilList().includes(value) ||
+        recipeArray.appliance.toLowerCase().includes(value)
+    })
+
+    if(foundArray.length > 0) {
+        recipeContainer.innerHTML = ""
+        ingredientsFilter(foundArray)
+        appareilsFilter(foundArray)
+        ustensilsFilter(foundArray)
+        createRecipe(foundArray)
+        foundArrayTemp = foundArray
+
+        return foundArray
     } else {
-        mainSection.innerHTML = "";
-        recipesArray.forEach(recipe => recipeFactory(recipe));
+        // Aucuns resultats
+        recipeContainer.innerText= "Aucune recette ne correspond à votre critère...vous pouvez chercher 'tarte aux pommes', 'poisson'. etc"
     }
 }
 
-// implemention sur la barre de recherche principale
 
-searchInput.addEventListener("keyup", function(e) {mainSearch(e)});
+// -- On initialise tout les recettes au chargement de page avec le call createRecipe()
+
+
+createRecipe(recipes)
+ingredientsFilter(recipes)
+appareilsFilter(recipes)
+ustensilsFilter(recipes)
+searchInput.focus()
+
+
+// Input de recherche -- on récupère la valeur et on call la fonction search() avec le keyword en param
+
+
+searchInput.addEventListener("keyup", (e)=> {
+    e.preventDefault()
+    let searchKey = searchInput.value
+        searchWord = searchKey.toLowerCase()
+        searchWord = searchWord.trim()
+    let searchWordLength = searchInput.value.length
+
+    //On valide le length de searchWord
+    if(searchWordLength <= 3) {
+        return
+    }
+    // on call la fonction search et donne l'array cherché avec la valeur de searchWord
+    search(recipes, searchWord)
+})
+
+console.log(foundArray);

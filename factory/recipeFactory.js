@@ -1,76 +1,79 @@
+export default class recipeClass {
+    constructor(name,serving, time, ingredients, description, appliance, ustensiles){
+        this.name = name
+        this.serving = serving
+        this.time = time
+        this.ingredients = ingredients
+        this.description = description
+        this.appliance = appliance
+        this.ustensiles = ustensiles
+    }
 
-let recipeFactory = (recipe) => {
-    //Image
-    let img = document.createElement('img');
-    img.classList.add('recipe_card_img');
-    //Titre
-    let title = document.createElement('h2');
-    title.textContent = recipe[1].name;
-    //Durée
-    let timeParent = document.createElement('div');
-    let timeIcon = document.createElement('span');
-    let timeText = document.createElement('p');
-    timeText.textContent = recipe[1].time + " min";
+    recipeCard() {
+        const recipeContainer = document.getElementById("recipe_container")
 
-    //On regroupe le header card 
-    let headerCard = document.createElement('div');
-    headerCard.appendChild(title);
-    headerCard.appendChild(timeParent);
+        let recipeContainerHTML = `
+        <article>
+            <div class="recipe_card">
+                <div class="recipe_header">
+                    <h3>${this.name}</h3>
+                    <h4><i class="far fa-clock"></i>${this.time} min</h4>
+                </div>
+                <div class="cook_method">
+                    <ul class="ingredients">
+                        ${this.createIngredient()}
+                    </ul>
+                    <p class="description">${this.description}</p>
+                </div>
+                <div class="cook_section">appliance: ${this.appliance}
+                </div>
+                <div class="cook_section">ustensils: ${this.ustensiles}
+                </div>
+            </div>
+        </article>
+        `
 
-    //Liste d'ingrédient 
-    let ingredients = document.createElement('div');
-    ingredients.classList.add('ingredient_container');
+        recipeContainer.innerHTML += recipeContainerHTML
+    }
 
-
-    let eachIngredient = recipe[1].ingredients.map(function(ingredients) {
-        if (Object.prototype.hasOwnProperty.call(ingredients, "quantity") && Object.prototype.hasOwnProperty.call(ingredients, "unit")) {
-            return "<p><span class='ingredient'>" + ingredients.ingredient + "</span>: " + ingredients.quantity + ingredients.unit + "</p>";    
-        } else if (Object.prototype.hasOwnProperty.call(ingredients, "quantity") && !Object.prototype.hasOwnProperty.call(ingredients, "unit")) {
-            return "<p><span class='ingredient'>" + ingredients.ingredient + "</span>: " + ingredients.quantity + "</p>";
-        } else if (Object.prototype.hasOwnProperty.call(ingredients, "quantity") && !Object.prototype.hasOwnProperty.call(ingredients, "unit")) {
-            return "<p><span class='ingredient'>" + ingredients.ingredient + "</span></p>";
-        }
-    }).join("");
-
-    ingredients.innerHTML = eachIngredient;
-
-    //Méthode de cuisson
-    let method = document.createElement('p');
-    method.classList.add('cuisson_description');
-    method.textContent = recipe[1].description;
-
-    //Appareil
-    let appliances = document.createElement('p');
-    appliances.classList.add('appareil');
-    appliances.textContent = recipe[1].appliances;
-    
-    //Ustensile
-    let utensils = document.createElement('div');
-    let eachUtensils = recipe[1].ustensils.map((utensil) => {
-        return "<p class='ustensil sr_only'>" + utensil + "</p>";
-    }).join("");
-    utensils.innerHTML = eachUtensils;
-
-    //Carte recette body + DOM
-    let recipeCard = document.createElement('div');
-    recipeCard.classList.add('recipe_card');
-
-    recipeCard.appendChild(ingredients);
-    recipeCard.appendChild(method);
-    recipeCard.appendChild(appliances);
-    recipeCard.appendChild(utensils);
-
-    //Container
-    let recipeContainer = document.createElement('article');
-    recipeContainer.classList.add('recipe_container');
-
-    //DOM
-    recipeContainer.appendChild(img);
-    recipeContainer.appendChild(headerCard);
-    recipeContainer.appendChild(recipeCard);
-
-    let main = document.getElementById("main");
-    main.appendChild(recipeContainer);
+    createIngredient() {
+        return `
+        ${this.ingredients.map(function(eachIngredient){
+            let unit = eachIngredient.unit
+            let quantity = eachIngredient.quantity
+                function quantityCheck(){
+                    if(quantity === undefined){
+                        quantity = ""
+                        return quantity
+                    } else {
+                        return quantity
+                    }
+                }
+                function unitCheck(){
+                    if(unit === undefined){
+                        unit = ""
+                        return unit
+                    } else if(unit === "grammes"){
+                        return "g"
+                    } else {
+                        return unit
+                    }
+                }
+                function colonAdd(){
+                    if(unit || quantity){
+                        return ":"
+                    } else {
+                        return ""
+                    }
+                }
+            return ` <li> ${eachIngredient.ingredient} ${colonAdd()} ${quantityCheck()} ${unitCheck()} </li>
+            `
+        }).join('')}
+        `
+    }
 }
 
-export { recipeFactory };
+
+
+
+

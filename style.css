@@ -115,45 +115,59 @@ header img {
 
 /** Main ( recipe ) **/ 
 
-#main { 
+#recipe_container{ 
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, auto);
+    grid-template-rows: auto;
     grid-column-gap: 2%;
 }
 
-.recipe_card_img {
-    height: 180px;
-    width: 100%;
-    background-color: #C7BEBE;
-    border-radius: 5%;
-    border: none;
-}
-
-
 article {
     margin: 5% 0 5% 0;
-    background-color: #E7E7E7;
+    height: 400px;
+    background-color: #c7bebe;
     border-radius: 3%;
     cursor: pointer;
+    position: relative;
 }
+
+.recipe_header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: fit-content;
+    margin: 0;
+}
+
 
 .recipe_card {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-size: 0.9rem;
-    max-height: 150px;
-    word-wrap: break-word;
-    padding: 1.20rem;
+    position: absolute;
+    bottom: 0;
+    height: 250px;
+    background-color: #E7E7E7;
 }
 
-.cuisson_description {
+.cook_method {
+    display: flex;
+    flex-direction: row;
+    font-size: 0.75rem;
     overflow: hidden;
-    text-overflow: ellipsis;
-    text-align: justify;
-    width: 50%;
+    height: 137px;
+}
+
+.description {
+    width: 60%;
+    
+}
+
+.ingredients {
+    font-weight: 700;
+    margin-right: 2rem;
+}
+
+ul {
+    list-style-type: none;
+    margin-left: 0;
 }
 
 .sr_only {
