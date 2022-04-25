@@ -6,7 +6,6 @@ import recipeClass from "../factory/recipeFactory.js";
 // -- DOM
 const searchInput = document.getElementById("main_search_bar")
 const recipeContainer = document.getElementById("recipe_container")
-
 // -- Variables
 
 let ingredients = []
@@ -79,50 +78,58 @@ function createRecipe(recipeArr){
 };
 
 
-//-- Fonction de recherche V2
+//-- Fonction de recherche v1 : Boucle FOR
 
-
-function search(recipeArrays, value){
-    const foundArray = recipeArrays.filter((recipeArray) => {
-        // On prends tout les ingrédient pour chaque recette pour la validité de condition plus tard
-        function ingredientList(){
+function search(arr, value) {
+    foundArray = []
+    //chaque recette en string-lowercase
+    for(let i=0; i <arr.length; i++) {
+        function listIngredient(){
             let x = ""
-            recipeArray.ingredients.forEach(ingredient => {
-                x += ingredient.ingredient.toLowerCase() + ' '
-            })
+            arr[i].ingredients.forEach(ingredient => {
+                x += ingredient.ingredient + ' '
+            });
             return x
-        }
-
-        // On prends tout les ustensiles pour chaque recette pour la validité de condition plus tard
-        function ustensilList(){
+        } 
+        
+        function listUstensil(){
             let y = ""
-            recipeArray.ustensils.forEach(ustensil => {
-                y += ustensil.toLowerCase() + ' '
+            arr[i].ustensils.forEach(ustensil=> {
+                y += ustensil
             })
             return y
         }
-
-        return recipeArray.name.toLowerCase().includes(value) ||
-        recipeArray.description.toLowerCase().includes(value) ||
-        ingredientList().includes(value) ||
-        ustensilList().includes(value) ||
-        recipeArray.appliance.toLowerCase().includes(value)
-    })
-
-    if(foundArray.length > 0) {
+        //on met le nom + tout les ingredients + description dans une variable pour la recherche
+        let recipeTemp = arr[i].name + " , " +
+                         listIngredient() + " , " +
+                         arr[i].description +
+                         arr[i].appliance + " , " +
+                         listUstensil()
+        
+        recipeTemp = recipeTemp.toLocaleLowerCase()
+        recipeTemp = recipeTemp.trim()
+        console.log(recipeTemp)
+        let foundBoolean = recipeTemp.includes(value)
+        if(foundBoolean === true) {
+            foundArray.push(arr[i])
+        }
+    } 
+    //On check si found array a quelque chose
+    if(foundArray.length > 0){
         recipeContainer.innerHTML = ""
+        //on apelle la fonction createRecipe() pour charque recette trouvée
         ingredientsFilter(foundArray)
         appareilsFilter(foundArray)
         ustensilsFilter(foundArray)
         createRecipe(foundArray)
-        foundArrayTemp = foundArray
-
-        return foundArray
     } else {
-        // Aucuns resultats
-        recipeContainer.innerText= "Aucune recette ne correspond à votre critère...vous pouvez chercher 'tarte aux pommes', 'poisson'. etc"
+        //Aucuns résultats
+        recipeContainer.innerText = "Aucune recette ne correspond à votre critère...vous pouvez chercher 'tarte aux pommes', 'poisson'. etc" 
     }
-}
+
+    foundArrayTemp = foundArray
+    return foundArrayTemp, foundArray
+};
 
 
 // -- On initialise tout les recettes au chargement de page avec le call createRecipe()
