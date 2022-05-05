@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="stylesheet" href="style.css">
+    <link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
     <script src="https://kit.fontawesome.com/60db700768.js" crossorigin="anonymous"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
@@ -24,22 +25,36 @@
 
         <!---Filtre-->
 
+        <div id="tag_array"></div>
+
         <div class="filter_container">
             <section class="filter">
                 <div class="filter_button">
                     <div class="filter_select">
-                        <a href="#" role="button" class=" ingredient filter_select_trigger"  aria-haspopup="listbox" aria-label="Trier par" aria-expanded="false">
-                            <span>Ingrédients</span>
-                            <div class="arrow"></div>
-                        </a>
-                        <a href="#" role="button" class="appareil filter_select_trigger"  aria-haspopup="listbox" aria-label="Trier par" aria-expanded="false">
-                            <span>Appareil</span>
-                            <div class="arrow"></div>
-                        </a>
-                        <a href="#" role="button" class="ustensiles filter_select_trigger"  aria-haspopup="listbox" aria-label="Trier par" aria-expanded="false">
-                            <span>Ustensiles</span>
-                            <div class="arrow"></div>
-                        </a>
+                        <div class="btn_section">
+                            <a href="#" id="btn_ingredient" role="button" class=" ingredient filter_select_trigger tag_container blue"  aria-haspopup="listbox" aria-label="Trier par" aria-expanded="false">
+                                <span>Ingrédients</span>
+                                <form>
+                                    <input id="search_input_ingredient" type="search" class="hidden tag_input" placeholder="Chercher un ingrédient">
+                                </form>
+                                <div class="arrow"></div>   
+                            </a>
+                            <ul class="tag_content blue"></ul>
+                        </div>
+                        <div class="btn_section">
+                            <a href="#" id="btn_appareil" role="button" class="appareil filter_select_trigger tag_container green"  aria-haspopup="listbox" aria-label="Trier par" aria-expanded="false">
+                                <span>Appareil</span>
+                                <div class="arrow"></div>
+                            </a>
+                            <ul class="green tag_content"></ul>
+                        </div>
+                        <div class="btn_section">
+                            <a href="#" id="btn_ustensil" role="button" class="ustensiles filter_select_trigger tag_container red"  aria-haspopup="listbox" aria-label="Trier par" aria-expanded="false">
+                                <span>Ustensiles</span>
+                                <div class="arrow"></div>
+                            </a>
+                            <ul class="red tag_content"></ul>
+                        </div>
                     </div>
                 </div>
             </section>

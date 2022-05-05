@@ -5,7 +5,10 @@ import recipeClass from "../factory/recipeFactory.js";
 
 // -- DOM
 const searchInput = document.getElementById("main_search_bar")
+const inputIngredient = document.getElementById("search_input_ingredient")
 const recipeContainer = document.getElementById("recipe_container")
+const tagContainer = document.querySelectorAll(".tag_container")
+const tagArray = document.getElementById("tag_array")
 // -- Variables
 
 let ingredients = []
@@ -161,3 +164,136 @@ searchInput.addEventListener("keyup", (e)=> {
 })
 
 console.log(foundArray);
+
+// -- Fonction création des tags 
+
+function createTags(category){
+    let createTag = `${category.map(function(item){
+        return `<li class="tag cursor"> ${item}</li>`
+    }).join('')} `
+    return createTag
+};
+
+// -- DROPDOWN, ingredients + appareils + ustensiles
+
+tagContainer.forEach(tagContainer =>{
+
+    tagContainer.addEventListener('click', (e)=>{
+        e.preventDefault()
+        closeTag()
+
+        const ulTagContent = tagContainer.nextElementSibling
+        tagContainer.classList.add("active")
+
+        // Ingredient
+        if((tagContainer.classList.contains("active") && tagContainer.classList.contains("blue"))){
+            //appel à createTag() pour push dans ul
+            ulTagContent.classList.add("ul_active")
+            ulTagContent.innerHTML = createTags(ingredients)
+
+            inputIngredient.classList.remove('hidden')
+            inputIngredient.focus()
+            tagCall("blue")
+
+            //Ingredient search bar listener
+            inputIngredient.addEventListener('keyup', (e)=>{
+                e.preventDefault()
+                let searchInput = e.target.value.toLowerCase().trim()
+                //Renvoi les arrays en recherche
+                const tagsFound = ingredients.filter((ingredient)=>{
+                    return ingredient.toLowerCase().includes(searchInput)
+                })
+
+                if(tagsFound.length > 0){
+                    ulTagContent.innerHTML = createTags(tagsFound)
+                } else {
+                    ulTagContent.innerHTML = "Aucuns ingrédients ne correspond à votre recherche"
+                }
+                //Affiche tout les tags
+                tagCall("blue")
+
+            })
+        } else if (tagContainer.classList.contains("active") && tagContainer.classList.contains("green")){
+            ulTagContent.classList.add("ul_active")
+            ulTagContent.innerHTML = createTags(appareils)
+
+            //Affiche tout les tags appareils
+            tagCall("green")
+        } else if (tagContainer.classList.contains("active") && tagContainer.classList.contains("red")){
+            ulTagContent.classList.add("ul_active")
+            ulTagContent.innerHTML = createTags(ustensils)
+
+            //Affiche tout les tags appareils
+            tagCall("red")
+        }
+    })
+})
+
+//--Listener pour la création de nouveaux tags
+
+function tagCall(color){
+    const tagLi = document.querySelectorAll(".tag")
+    
+    tagLi.forEach(tag =>{
+        tag.addEventListener('click', (e)=>{
+            e.preventDefault()
+            let tagSelected = e.target.innerHTML.toLowerCase()
+            tagSelected = tagSelected.trim()
+            
+            //Check si un tag est séléctionné, si oui on l'affiche
+            if(tagSelected === ""){
+                return
+            } else {
+                var p = document.createElement('p')
+                var pTag = document.createTextNode(tagSelected)
+                p.appendChild(pTag)
+                p.classList.add("tag_selected")
+                p.classList.add("cursor")
+                p.classList.add(color)
+
+                tagArray.appendChild(p)
+                closeTag()
+            }
+
+            if (foundArrayTemp.length === 0){
+                search(recipes,tagSelected)
+            } else {
+                search(foundArrayTemp,tagSelected)
+            }
+            removeSelectedTag()
+        })
+    })
+}
+function closeTag(){
+    tagContainer.forEach(tagContainers =>{
+        inputIngredient.classList.add("hidden")
+        inputIngredient.innerText=""
+        tagContainers.classList.remove("active")
+        const ulTagContent = tagContainers.nextElementSibling
+        ulTagContent.classList.remove("ul_active")
+    })
+}
+
+function removeSelectedTag(){
+    const tagSelected = document.querySelectorAll(".tag_selected")
+    tagSelected.forEach(tagSelected =>{
+        tagSelected.addEventListener('click', (e) =>{
+            e.target.remove(e.target)
+
+            if (tagArray.childElementCount == 0 && searchWord == ""){
+                location.reload()
+            } else if (tagArray.childElementCount >= 1 && searchWord == "") {
+                search(recipes, tagArray.childNodes[0].innerText)
+                for(let i = 1; i < tagArray.childElementCount; i++){
+                    search(foundArrayTemp, tagArray.childNodes[i].innerText)
+                }
+            } else if (searchWord){
+                search(recipes, searchWord)
+                for(let i = 0; i < tagArray.childElementCount; i++){
+                    search(foundArrayTemp, tagArray.childNodes[i].innerText)
+                }
+                searchInput.classList.remove("disable")
+            }
+        })
+    })
+}

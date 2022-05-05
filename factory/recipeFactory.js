@@ -25,10 +25,6 @@ export default class recipeClass {
                     </ul>
                     <p class="description">${this.description}</p>
                 </div>
-                <div class="cook_section">appliance: ${this.appliance}
-                </div>
-                <div class="cook_section">ustensils: ${this.ustensiles}
-                </div>
             </div>
         </article>
         `
