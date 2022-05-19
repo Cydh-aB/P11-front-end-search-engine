@@ -11,6 +11,7 @@ const inputAppareil = document.getElementById("search_input_appareil")
 const recipeContainer = document.getElementById("recipe_container")
 const tagContainer = document.querySelectorAll(".tag_container")
 const tagArray = document.getElementById("tag_array")
+const errorText = document.getElementById("error")
 // -- Variables
 
 let ingredients = []
@@ -20,8 +21,11 @@ let appareilsArr = []
 let ustensils = []
 let ustensilsArr = []
 let searchWord = ""
+let valid = false
+
 var foundArray = []
 var foundArrayTemp = []
+
 
 //-------------------TEST----------------//
 // console.log(recipesArray);
@@ -80,6 +84,20 @@ function createRecipe(recipeArr){
     }).join("")
 };
 
+function inputValidation(value){ 
+    if (value < 3 && value >0){
+        errorText.innerText =""
+        errorText.classList.remove("hidden")
+        errorText.classList.add("error_text")
+        errorText.innerText ="Veuilliez saisir au moins 3 caractères."
+        valid = false
+        return valid
+    } else {
+        errorText.innerText =""
+        valid = true
+        return valid
+    }
+};
 
 //-- Fonction de recherche v1 : Boucle FOR
 
@@ -156,7 +174,8 @@ searchInput.addEventListener("input", (e)=> {
     let searchWordLength = searchInput.value.length
 
     //On valide le length de searchWord
-    if(searchWordLength < 3) {
+    inputValidation(searchWordLength)
+    if(valid === false) {
         return
     }
     // on call la fonction search et donne l'array cherché avec la valeur de searchWord
