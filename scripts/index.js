@@ -6,6 +6,8 @@ import recipeClass from "../factory/recipeFactory.js";
 // -- DOM
 const searchInput = document.getElementById("main_search_bar")
 const inputIngredient = document.getElementById("search_input_ingredient")
+const inputUstensil = document.getElementById("search_input_ustensil")
+const inputAppareil = document.getElementById("search_input_appareil")
 const recipeContainer = document.getElementById("recipe_container")
 const tagContainer = document.querySelectorAll(".tag_container")
 const tagArray = document.getElementById("tag_array")
@@ -17,14 +19,12 @@ let appareils = []
 let appareilsArr = []
 let ustensils = []
 let ustensilsArr = []
-var searchWord = ""
+let searchWord = ""
 var foundArray = []
 var foundArrayTemp = []
 
 //-------------------TEST----------------//
 // console.log(recipesArray);
-
-// recipesArray.forEach(recipe => recipeFactory(recipe));
 //-------------------TEST----------------//
 
 
@@ -86,7 +86,7 @@ function createRecipe(recipeArr){
 function search(arr, value) {
     foundArray = []
     //chaque recette en string-lowercase
-    for(let i=0; i <arr.length; i++) {
+    for(let i=0; i < arr.length; i++) {
         function listIngredient(){
             let x = ""
             arr[i].ingredients.forEach(ingredient => {
@@ -109,7 +109,7 @@ function search(arr, value) {
                          arr[i].appliance + " , " +
                          listUstensil()
         
-        recipeTemp = recipeTemp.toLocaleLowerCase()
+        recipeTemp = recipeTemp.toLowerCase()
         recipeTemp = recipeTemp.trim()
         console.log(recipeTemp)
         let foundBoolean = recipeTemp.includes(value)
@@ -120,7 +120,7 @@ function search(arr, value) {
     //On check si found array a quelque chose
     if(foundArray.length > 0){
         recipeContainer.innerHTML = ""
-        //on apelle la fonction createRecipe() pour charque recette trouvée
+        //on apelle la fonction createRecipe() pour chaque recette trouvée
         ingredientsFilter(foundArray)
         appareilsFilter(foundArray)
         ustensilsFilter(foundArray)
@@ -148,7 +148,7 @@ searchInput.focus()
 // Input de recherche -- on récupère la valeur et on call la fonction search() avec le keyword en param
 
 
-searchInput.addEventListener("keyup", (e)=> {
+searchInput.addEventListener("input", (e)=> {
     e.preventDefault()
     let searchKey = searchInput.value
         searchWord = searchKey.toLowerCase()
@@ -156,7 +156,7 @@ searchInput.addEventListener("keyup", (e)=> {
     let searchWordLength = searchInput.value.length
 
     //On valide le length de searchWord
-    if(searchWordLength <= 3) {
+    if(searchWordLength < 3) {
         return
     }
     // on call la fonction search et donne l'array cherché avec la valeur de searchWord
@@ -213,18 +213,62 @@ tagContainer.forEach(tagContainer =>{
                 tagCall("blue")
 
             })
+
         } else if (tagContainer.classList.contains("active") && tagContainer.classList.contains("green")){
             ulTagContent.classList.add("ul_active")
             ulTagContent.innerHTML = createTags(appareils)
 
+            inputAppareil.classList.remove('hidden')
+            inputAppareil.focus()
             //Affiche tout les tags appareils
             tagCall("green")
+
+            //Ingredient search bar listener
+            inputAppareil.addEventListener('keyup', (e)=>{
+                e.preventDefault()
+                let searchInput = e.target.value.toLowerCase().trim()
+                //Renvoi les arrays en recherche
+                const tagsFound = appareils.filter((appareil)=>{
+                    return appareil.toLowerCase().includes(searchInput)
+                })
+
+                if(tagsFound.length > 0){
+                    ulTagContent.innerHTML = createTags(tagsFound)
+                } else {
+                    ulTagContent.innerHTML = "Aucuns ingrédients ne correspond à votre recherche"
+                }
+                //Affiche tout les tags
+                tagCall("green")
+
+            })
+
         } else if (tagContainer.classList.contains("active") && tagContainer.classList.contains("red")){
             ulTagContent.classList.add("ul_active")
             ulTagContent.innerHTML = createTags(ustensils)
 
+            inputUstensil.classList.remove('hidden')
+            inputUstensil.focus()
             //Affiche tout les tags appareils
             tagCall("red")
+
+            //Barre de recherche ustensiles
+            inputUstensil.addEventListener('keyup', (e)=>{
+                e.preventDefault()
+                let searchInput = e.target.value.toLowerCase().trim()
+                //Renvoi les arrays en recherche
+                const tagsFound = ustensils.filter((ustensil)=>{
+                    return ustensil.toLowerCase().includes(searchInput)
+                })
+
+                if(tagsFound.length > 0){
+                    ulTagContent.innerHTML = createTags(tagsFound)
+                } else {
+                    ulTagContent.innerHTML = "Aucuns ingrédients ne correspond à votre recherche"
+                }
+                //Affiche tout les tags
+                tagCall("red")
+
+            })
         }
     })
 })
@@ -264,15 +308,24 @@ function tagCall(color){
         })
     })
 }
+
+// -- Fonction pour réinitialiser les boutons
+
 function closeTag(){
     tagContainer.forEach(tagContainers =>{
         inputIngredient.classList.add("hidden")
         inputIngredient.innerText=""
+        inputAppareil.classList.add("hidden")
+        inputAppareil.innerText=""
+        inputUstensil.classList.add("hidden")
+        inputUstensil.innerText=""
         tagContainers.classList.remove("active")
         const ulTagContent = tagContainers.nextElementSibling
         ulTagContent.classList.remove("ul_active")
     })
 }
+
+// -- Fonction pour retirer les tag séléctionnés
 
 function removeSelectedTag(){
     const tagSelected = document.querySelectorAll(".tag_selected")
@@ -297,3 +350,17 @@ function removeSelectedTag(){
         })
     })
 }
+
+// Event pour la fermeture des bouttons filtre
+// au clic en dehors des bouttons
+
+const closeClick = document.querySelectorAll("html")
+closeClick.forEach(item =>{
+    item.addEventListener('click', (e)=>{
+        e.preventDefault()
+        if((e.target.classList.contains("active")) || (e.target.classList.contains("ul_active"))){
+        } else {
+            closeTag()
+        }
+    })
+});

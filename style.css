@@ -152,6 +152,14 @@ header img {
     width: 350px;
 }
 
+#search_input_appareil {
+    background-color: #68D9A4;
+}
+
+#search_input_ustensil {
+    background-color: #ED6454;
+}
+
 .tag {
     line-height: 22px;
     margin-left: 0.1rem;
