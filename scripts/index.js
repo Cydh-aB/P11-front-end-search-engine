@@ -27,11 +27,6 @@ var foundArray = []
 var foundArrayTemp = []
 
 
-//-------------------TEST----------------//
-// console.log(recipesArray);
-//-------------------TEST----------------//
-
-
 //On extrait tout les ingrédients, appareils, ustensiles
 
 function ingredientsFilter(arr){
@@ -129,7 +124,6 @@ function search(arr, value) {
         
         recipeTemp = recipeTemp.toLowerCase()
         recipeTemp = recipeTemp.trim()
-        console.log(recipeTemp)
         let foundBoolean = recipeTemp.includes(value)
         if(foundBoolean === true) {
             foundArray.push(arr[i])
@@ -182,7 +176,6 @@ searchInput.addEventListener("input", (e)=> {
     search(recipes, searchWord)
 })
 
-console.log(foundArray);
 
 // -- Fonction création des tags 
 
