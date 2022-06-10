@@ -1,8 +1,6 @@
 import { recipes } from "../recipes.js";
 import recipeClass from "../factory/recipeFactory.js";
 
-// let recipesArray = Object.entries(recipes);
-
 // -- DOM
 const searchInput = document.getElementById("main_search_bar")
 const inputIngredient = document.getElementById("search_input_ingredient")
